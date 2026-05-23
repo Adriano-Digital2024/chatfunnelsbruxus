@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import SectionHeader from "@/components/SectionHeader";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAgent, useDeleteAgent, useUpdateAgent, useCurrentAgent } from "@/queries/useAgents";
@@ -10,12 +10,13 @@ import { type AIAgentRow, type AIAgentUpdate } from "@/supabase/client";
 import { startConversation } from "@/utils/ConversationUtils";
 import { useOrganizationsAddresses } from "@/queries/useOrganizationsAddresses";
 import SectionFooter from "@/components/SectionFooter";
-import { protocols, protocolLabels, defaultModels, creditModels, apiKeyInstructions } from "./new";
 import Button from "@/components/Button";
 import SelectField from "@/components/SelectField";
 import TextAreaField from "@/components/TextAreaField";
 import SectionField from "@/components/SectionField";
 import ToolsSection from "@/components/ToolsSection";
+import { useSubscription } from "@/queries/useBilling";
+import { getPlanTier, getModelsForTier } from "@/utils/modelsCatalog";
 
 export const Route = createFileRoute("/_auth/agents/$agentId")({
   component: AgentDetail,
@@ -31,20 +32,16 @@ function AgentDetail() {
   const deleteAgent = useDeleteAgent();
   const updateAgent = useUpdateAgent();
   const activeOrgId = useBoundStore((state) => state.ui.activeOrgId);
-  const [provider, setProvider] = useState<keyof typeof protocols>("openai");
+
+  const { data: subscription } = useSubscription();
+  const planName = (subscription as any)?.plans?.name ?? null;
+  const tier = getPlanTier(planName);
+  const availableModels = getModelsForTier(tier);
 
   const localAddress = useOrganizationsAddresses().data?.find(
     (address) => address.service === "local",
   );
 
-  useEffect(() => {
-    if (!agent) return;
-    const apiUrl = agent.extra?.api_url || "";
-    const isKnown = ["openai", "anthropic", "groq", "google"].includes(apiUrl);
-    setProvider(isKnown ? apiUrl : "custom");
-  }, [agent]);
-
-  // Normalize agent data to ensure tools is always an array
   const normalizedAgent = useMemo(() => {
     if (!agent) return undefined;
     return {
@@ -52,6 +49,8 @@ function AgentDetail() {
       extra: {
         ...agent.extra,
         tools: agent.extra?.tools ?? [],
+        api_url: "openrouter",
+        protocol: "chat_completions" as const,
       },
     };
   }, [agent]);
@@ -66,6 +65,11 @@ function AgentDetail() {
 
   const model = useWatch({ control, name: "extra.model" });
 
+  useEffect(() => {
+    setValue("extra.api_url", "openrouter");
+    setValue("extra.protocol", "chat_completions");
+  }, [setValue]);
+
   const handleChat = () => {
     if (!activeOrgId || !localAddress) return;
 
@@ -79,6 +83,8 @@ function AgentDetail() {
 
     navigate({ hash: convId });
   };
+
+  const currentModel = availableModels.find((m) => m.id === model);
 
   return agent && (
     <>
@@ -97,9 +103,16 @@ function AgentDetail() {
       <SectionBody>
         <form
           id="agent-form"
-          onSubmit={handleSubmit(data => updateAgent.mutate(data))}
+          onSubmit={handleSubmit((data) => updateAgent.mutate({
+            ...data,
+            extra: {
+              ...data.extra,
+              api_url: "openrouter",
+              protocol: "chat_completions",
+              api_key: undefined,
+            },
+          }))}
         >
-          {/* Root view fields */}
           <label>
             <div className="label">{t("Nombre")}</div>
             <input
@@ -130,101 +143,29 @@ function AgentDetail() {
             placeholder={t("Eres un asistente útil...")}
           />
 
-          {/* Tools Section */}
           <ToolsSection control={control} register={register} setValue={setValue} />
 
-          {/* AI Section */}
-          <SectionField label={t("Modelo de IA")} description={model || t("Ninguno")}>
+          {/* AI Model Section */}
+          <SectionField
+            label={t("Modelo de IA")}
+            description={currentModel ? `${currentModel.label} · ${currentModel.provider}` : model || t("Ninguno")}
+          >
             <SelectField
-              value={provider}
-              modalClassName="bottom-0"
-              onChange={(val) => {
-                setProvider(val);
-                setValue("extra.model", defaultModels[val] || "");
-
-                const availableProtocols = protocols[val as keyof typeof protocols];
-                setValue("extra.protocol", availableProtocols[0]);
-
-                if (val !== "custom") {
-                  setValue("extra.api_url", val, { shouldDirty: true });
-                } else {
-                  setValue("extra.api_url", "", { shouldDirty: true });
-                }
-              }}
-              label={t("Proveedor")}
-              options={[
-                { value: "openai", label: "OpenAI" },
-                { value: "anthropic", label: "Anthropic" },
-                { value: "groq", label: "Groq" },
-                { value: "google", label: "Google" },
-                { value: "custom", label: t("Personalizado") },
-              ]}
-            />
-
-            <SelectField
-              name="extra.protocol"
+              name="extra.model"
               control={control}
               modalClassName="bottom-0"
-              label={t("Protocolo")}
-              options={(protocols[provider as keyof typeof protocols] || []).map((p) => ({
-                value: p,
-                label: protocolLabels[p] || p,
+              label={t("Modelos disponibles")}
+              options={availableModels.map((m) => ({
+                value: m.id,
+                label: `${m.label} — ${m.provider}`,
               }))}
             />
 
-            {provider === "custom" && (
-              <label>
-                <div className="label">{t("API URL")}</div>
-                <input
-                  type="text"
-                  className="text"
-                  placeholder="https://api.example.com/v1"
-                  {...register("extra.api_url")}
-                />
-              </label>
-            )}
-
-            <label>
-              <div className="label">{t("Clave API")}</div>
-              <input
-                type="text"
-                className="text"
-                placeholder={t("Clave API del proveedor")}
-                {...register("extra.api_key")}
-              />
-            </label>
-
-            {provider !== 'custom' && apiKeyInstructions[provider] && (
-              <div className="instructions">
-                <p>
-                  {t("Usar una clave API propia no consume créditos locales y permite usar cualquier modelo.")}
-                </p>
-                <p>
-                  <a href={apiKeyInstructions[provider].url} target="_blank" rel="noopener noreferrer" className="underline">{apiKeyInstructions[provider].label}</a>
-                  {" > "}{apiKeyInstructions[provider].steps}
-                  {apiKeyInstructions[provider].free && ` — ${t("Gratuito.")}`}
-                </p>
-              </div>
-            )}
-
-            <label>
-              <div className="label">{t("Modelo")}</div>
-              <input
-                type="text"
-                className="text"
-                placeholder={t("Nombre del modelo")}
-                {...register("extra.model")}
-              />
-            </label>
-
-            {provider !== 'custom' && creditModels[provider] && (
-              <div className="instructions">
-                <p>{t("Los siguientes modelos funcionan con créditos de IA:")}</p>
-                <ul>
-                  {creditModels[provider].map((m) => <li key={m}><code>{m}</code></li>)}
-                </ul>
-              </div>
-            )}
+            <div className="instructions">
+              <p>
+                {t("Los modelos disponibles dependen de tu plan. El consumo es gestionado por la plataforma.")}
+              </p>
+            </div>
 
             <label>
               <div className="label">{t("Mensajes máximos")}</div>
@@ -249,23 +190,9 @@ function AgentDetail() {
                 {...register("extra.temperature", { valueAsNumber: true })}
               />
             </label>
-
-            {provider === 'custom' && (
-              <div className="instructions">
-                <p>{t("Se envían los siguientes encabezados HTTP con cada solicitud:")}</p>
-                <ul>
-                  <li><code>organization-id</code></li>
-                  <li><code>organization-address</code></li>
-                  <li><code>conversation-id</code></li>
-                  <li><code>agent-id</code></li>
-                  <li><code>contact-id</code></li>
-                  <li><code>contact-address</code></li>
-                </ul>
-              </div>
-            )}
           </SectionField>
         </form>
-      </SectionBody >
+      </SectionBody>
 
       <SectionFooter>
         {!isDirty ? (

@@ -64,9 +64,9 @@ function Login() {
           <GithubOutlined /> {t("Continuar con GitHub")}
         </button>
 
-        <div className={`border-b border-border w-full ${import.meta.env.DEV ? "" : "hidden"}`} />
+        <div className="border-b border-border w-full" />
 
-        <form onSubmit={handleLogInWithEmail} className={`login-form ${import.meta.env.DEV ? "" : "hidden"}`}>
+        <form onSubmit={handleLogInWithEmail} className="login-form">
           <label>
             <div className="label">{t("Correo electrónico")}</div>
             <input
@@ -100,6 +100,17 @@ function Login() {
             {t("Entrar")}
           </button>
         </form>
+
+        <div className="border-b border-border w-full" />
+
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <a href="/forgot-password" className="underline hover:text-foreground">
+            {t("¿Olvidaste tu contraseña?")}
+          </a>
+          <a href="/register" className="underline hover:text-foreground">
+            {t("Crear cuenta")}
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import SectionHeader from "@/components/SectionHeader";
 import SectionItem from "@/components/SectionItem";
 import { useTranslation } from "@/hooks/useTranslation";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Building2, Users, Webhook, Key } from "lucide-react";
+import { Building2, Users, Webhook, Key, CreditCard } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/settings/")({
   component: SettingsIndex,
@@ -43,6 +43,20 @@ function SettingsIndex() {
             onClick={() =>
               navigate({
                 to: "/settings/members",
+                hash: (prevHash) => prevHash!,
+              })
+            }
+          />
+          <SectionItem
+            title={t("Facturación")}
+            aside={
+              <div className="p-[8px]">
+                <CreditCard className="w-[24px] h-[24px] text-muted-foreground" />
+              </div>
+            }
+            onClick={() =>
+              navigate({
+                to: "/settings/billing",
                 hash: (prevHash) => prevHash!,
               })
             }

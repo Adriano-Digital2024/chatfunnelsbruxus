@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as OnboardTokenRouteImport } from './routes/onboard.$token'
@@ -23,6 +27,7 @@ import { Route as AuthContactsIndexRouteImport } from './routes/_auth/contacts/i
 import { Route as AuthAgentsIndexRouteImport } from './routes/_auth/agents/index'
 import { Route as AuthStatsUsageRouteImport } from './routes/_auth/stats/usage'
 import { Route as AuthStatsQuotasRouteImport } from './routes/_auth/stats/quotas'
+import { Route as AuthSettingsBillingRouteImport } from './routes/_auth/settings/billing'
 import { Route as AuthIntegrationsMediaPreprocessingRouteImport } from './routes/_auth/integrations/media-preprocessing'
 import { Route as AuthConversationsNewRouteImport } from './routes/_auth/conversations/new'
 import { Route as AuthContactsNewRouteImport } from './routes/_auth/contacts/new'
@@ -50,9 +55,29 @@ import { Route as AuthIntegrationsWhatsappOrgAddressIdTemplatesIndexRouteImport 
 import { Route as AuthIntegrationsWhatsappOrgAddressIdTemplatesNewRouteImport } from './routes/_auth/integrations/whatsapp/$orgAddressId/templates/new'
 import { Route as AuthIntegrationsWhatsappOrgAddressIdTemplatesTemplateIdRouteImport } from './routes/_auth/integrations/whatsapp/$orgAddressId/templates/$templateId'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -118,6 +143,11 @@ const AuthStatsQuotasRoute = AuthStatsQuotasRouteImport.update({
   id: '/quotas',
   path: '/quotas',
   getParentRoute: () => AuthStatsRoute,
+} as any)
+const AuthSettingsBillingRoute = AuthSettingsBillingRouteImport.update({
+  id: '/settings/billing',
+  path: '/settings/billing',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthIntegrationsMediaPreprocessingRoute =
   AuthIntegrationsMediaPreprocessingRouteImport.update({
@@ -269,7 +299,11 @@ const AuthIntegrationsWhatsappOrgAddressIdTemplatesTemplateIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stats': typeof AuthStatsRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
@@ -280,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/contacts/new': typeof AuthContactsNewRoute
   '/conversations/new': typeof AuthConversationsNewRoute
   '/integrations/media-preprocessing': typeof AuthIntegrationsMediaPreprocessingRoute
+  '/settings/billing': typeof AuthSettingsBillingRoute
   '/stats/quotas': typeof AuthStatsQuotasRoute
   '/stats/usage': typeof AuthStatsUsageRoute
   '/agents': typeof AuthAgentsIndexRoute
@@ -310,7 +345,11 @@ export interface FileRoutesByFullPath {
   '/integrations/whatsapp/$orgAddressId/templates': typeof AuthIntegrationsWhatsappOrgAddressIdTemplatesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
   '/': typeof AuthIndexRoute
@@ -320,6 +359,7 @@ export interface FileRoutesByTo {
   '/contacts/new': typeof AuthContactsNewRoute
   '/conversations/new': typeof AuthConversationsNewRoute
   '/integrations/media-preprocessing': typeof AuthIntegrationsMediaPreprocessingRoute
+  '/settings/billing': typeof AuthSettingsBillingRoute
   '/stats/quotas': typeof AuthStatsQuotasRoute
   '/stats/usage': typeof AuthStatsUsageRoute
   '/agents': typeof AuthAgentsIndexRoute
@@ -352,7 +392,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_auth/stats': typeof AuthStatsRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
@@ -363,6 +407,7 @@ export interface FileRoutesById {
   '/_auth/contacts/new': typeof AuthContactsNewRoute
   '/_auth/conversations/new': typeof AuthConversationsNewRoute
   '/_auth/integrations/media-preprocessing': typeof AuthIntegrationsMediaPreprocessingRoute
+  '/_auth/settings/billing': typeof AuthSettingsBillingRoute
   '/_auth/stats/quotas': typeof AuthStatsQuotasRoute
   '/_auth/stats/usage': typeof AuthStatsUsageRoute
   '/_auth/agents/': typeof AuthAgentsIndexRoute
@@ -395,7 +440,11 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/forgot-password'
     | '/login'
+    | '/pricing'
+    | '/register'
+    | '/reset-password'
     | '/stats'
     | '/oauth/callback'
     | '/onboard/$token'
@@ -406,6 +455,7 @@ export interface FileRouteTypes {
     | '/contacts/new'
     | '/conversations/new'
     | '/integrations/media-preprocessing'
+    | '/settings/billing'
     | '/stats/quotas'
     | '/stats/usage'
     | '/agents'
@@ -436,7 +486,11 @@ export interface FileRouteTypes {
     | '/integrations/whatsapp/$orgAddressId/templates'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/forgot-password'
     | '/login'
+    | '/pricing'
+    | '/register'
+    | '/reset-password'
     | '/oauth/callback'
     | '/onboard/$token'
     | '/'
@@ -446,6 +500,7 @@ export interface FileRouteTypes {
     | '/contacts/new'
     | '/conversations/new'
     | '/integrations/media-preprocessing'
+    | '/settings/billing'
     | '/stats/quotas'
     | '/stats/usage'
     | '/agents'
@@ -477,7 +532,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_auth'
+    | '/forgot-password'
     | '/login'
+    | '/pricing'
+    | '/register'
+    | '/reset-password'
     | '/_auth/stats'
     | '/oauth/callback'
     | '/onboard/$token'
@@ -488,6 +547,7 @@ export interface FileRouteTypes {
     | '/_auth/contacts/new'
     | '/_auth/conversations/new'
     | '/_auth/integrations/media-preprocessing'
+    | '/_auth/settings/billing'
     | '/_auth/stats/quotas'
     | '/_auth/stats/usage'
     | '/_auth/agents/'
@@ -520,18 +580,50 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  PricingRoute: typeof PricingRoute
+  RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   OauthCallbackRoute: typeof OauthCallbackRoute
   OnboardTokenRoute: typeof OnboardTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -624,6 +716,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/stats/quotas'
       preLoaderRoute: typeof AuthStatsQuotasRouteImport
       parentRoute: typeof AuthStatsRoute
+    }
+    '/_auth/settings/billing': {
+      id: '/_auth/settings/billing'
+      path: '/settings/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof AuthSettingsBillingRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/integrations/media-preprocessing': {
       id: '/_auth/integrations/media-preprocessing'
@@ -835,6 +934,7 @@ interface AuthRouteChildren {
   AuthContactsNewRoute: typeof AuthContactsNewRoute
   AuthConversationsNewRoute: typeof AuthConversationsNewRoute
   AuthIntegrationsMediaPreprocessingRoute: typeof AuthIntegrationsMediaPreprocessingRoute
+  AuthSettingsBillingRoute: typeof AuthSettingsBillingRoute
   AuthAgentsIndexRoute: typeof AuthAgentsIndexRoute
   AuthContactsIndexRoute: typeof AuthContactsIndexRoute
   AuthConversationsIndexRoute: typeof AuthConversationsIndexRoute
@@ -872,6 +972,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthConversationsNewRoute: AuthConversationsNewRoute,
   AuthIntegrationsMediaPreprocessingRoute:
     AuthIntegrationsMediaPreprocessingRoute,
+  AuthSettingsBillingRoute: AuthSettingsBillingRoute,
   AuthAgentsIndexRoute: AuthAgentsIndexRoute,
   AuthContactsIndexRoute: AuthContactsIndexRoute,
   AuthConversationsIndexRoute: AuthConversationsIndexRoute,
@@ -910,7 +1011,11 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  PricingRoute: PricingRoute,
+  RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   OauthCallbackRoute: OauthCallbackRoute,
   OnboardTokenRoute: OnboardTokenRoute,
 }

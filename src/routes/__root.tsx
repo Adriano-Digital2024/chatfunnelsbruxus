@@ -7,6 +7,18 @@ import { redirect } from "@tanstack/react-router";
 import { supabase } from "@/supabase/client";
 import { useSetActiveOrg } from "@/hooks/useSetActiveOrg";
 
+const PUBLIC_PATHS = ["/login", "/onboard", "/register", "/forgot-password", "/reset-password", "/pricing"];
+
+function isPublicPath(pathname: string) {
+  return PUBLIC_PATHS.some((p) => pathname.startsWith(p));
+}
+
+const AUTH_REDIRECT_PATHS = ["/login", "/register", "/forgot-password"];
+
+function isAuthRedirectPath(pathname: string) {
+  return AUTH_REDIRECT_PATHS.some((p) => pathname.startsWith(p));
+}
+
 function RootLayout() {
   useAuth();
   useSetActiveOrg();
@@ -28,13 +40,13 @@ export const Route = createRootRoute({
       user = data?.session?.user ?? null;
     }
 
-    if (user && location.pathname.startsWith("/login")) {
+    if (user && isAuthRedirectPath(location.pathname)) {
       throw redirect({
         to: search.redirect || "/",
       });
     }
 
-    if (!user && !location.pathname.startsWith("/login") && !location.pathname.startsWith("/onboard")) {
+    if (!user && !isPublicPath(location.pathname)) {
       throw redirect({
         to: "/login",
         search: {
