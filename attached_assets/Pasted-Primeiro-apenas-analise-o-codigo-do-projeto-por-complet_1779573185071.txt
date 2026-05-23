@@ -1,0 +1,92 @@
+Primeiro apenas analise o codigo do projeto por completo sem qualquer alteração para 
+você conhecer toda estrutura.
+
+A seguir, preciso que você ANALISE e RESPONDA apenas, sem modificar nada:
+O projeto usa o banco conectado ao supabase.
+
+No projeto, quais destas rotas já existem em src/routes/?
+
+src/routes/pricing.tsx
+src/routes/billing.tsx
+src/routes/checkout.tsx
+src/components/PricingCards.tsx
+src/components/PlanComparison.tsx
+
+/login (Esta solicitando "Primeiro Nome, Email e WhatsApp formato internacional") ?
+/register
+/forgot-password
+/reset-password
+/verify-email
+
+Em qual arquivo está configurado o cliente Supabase?
+
+Responda apenas com base no código existente.
+
+Existe painel do usuario e o painel administrativo?
+
+Por fim, sem alterar nada que existe no codigo, qual seria sua sigestao para que o
+projeto fique completo com sistema de autenticação e planos com a integração do stripe
+que ja existe conectado ao supabase? 
+
+Lembre-se;
+Todo projeto esta em inglês português e espanhol com 
+import { useTranslation } from "@/hooks/useTranslation"
+const { translate: t } = useTranslation()
+
+A seguir estou encaminhando uma sugestão de planos , por favor, analise e me responda se esta 
+alinhado e compativel com as funcionalidades do projeto e qual seria sua sugestão já que você 
+analisou o codigo e já sabe do potencial do projeto;
+E por fim, me liste o que falta para colocar o projeto em produção?
+
+📋 Planos Bruxus (Definitivo)
+💚 BRUXUS PRO (R$ 199/mês) ⭐ Mais popular
+IA personalizada + 5 WhatsApps
+
+Recurso	Limite
+Mensagens	50.000/mês
+WhatsApps conectados	5
+Contatos	10.000
+Organizações	3
+Agentes IA	5 personalizados
+Processamento de mídia	Completo
+API REST + Webhooks	✅
+Teste A/B	✅
+RBAC	até 10 usuários
+Suporte	WhatsApp (4h)
+Free trial	3 dias ✅
+🏢 BRUXUS BUSINESS (R$ 399/mês)
+Múltiplas organizações + IA avançada
+
+Recurso	Limite
+Mensagens	200.000/mês
+WhatsApps conectados	15
+Contatos	50.000
+Organizações	10
+Agentes IA	20 personalizados
+Processamento de mídia	Completo + prioridade
+API REST + Webhooks	✅
+Teste A/B	✅
+RBAC	até 50 usuários
+Suporte	WhatsApp + Telegram (2h)
+Free trial	3 dias ✅
+🚀 BRUXUS ENTERPRISE (R$ 799/mês)
+Ilimitado + Self-host + SLA
+
+Recurso	Limite
+Mensagens	1.000.000+/mês
+WhatsApps conectados	Ilimitado
+Contatos	Ilimitado
+Organizações	Ilimitado
+Agentes IA	Ilimitado premium
+Processamento de mídia	Avançado
+Self-host	✅
+RBAC	Ilimitado
+Suporte	WhatsApp + Telegram (1h SLA)
+SLA	99.9% garantido
+Onboarding com treinamento	✅
+Free trial	3 dias ✅
+💰 Resumo:
+Plano	Preço	Free trial
+PRO	R$ 199/mês	3 dias
+BUSINESS	R$ 399/mês	3 dias
+ENTERPRISE	R$ 799/mês	3 dias
