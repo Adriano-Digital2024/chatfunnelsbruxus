@@ -1,0 +1,21 @@
+# Env
+.env*
+env
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# Node
+node_modules
+
+# Editors
+.vscode
+.zed
+
+# Claude
+.claude
+
+mise.toml
+
+.tanstack
+dist/
