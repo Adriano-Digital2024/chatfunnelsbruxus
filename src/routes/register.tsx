@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/supabase/client";
 import { useTranslation } from "@/hooks/useTranslation";
+import { GoogleOutlined } from "@ant-design/icons";
 
 export const Route = createFileRoute("/register")({
   component: Register,
@@ -15,6 +16,15 @@ function Register() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  async function handleGoogleSignUp() {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/",
+      },
+    });
+  }
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -41,7 +51,7 @@ function Register() {
 
   return (
     <div className="flex flex-col gap-9 justify-center items-center bg-background text-foreground h-dvh w-screen">
-      <img src="/logo.png" alt="FlowAction" className="h-20 w-auto mb-4" />
+      <img src="/logo.png" alt="Bruxus" className="h-20 w-auto mb-4" />
 
       {success ? (
         <div className="flex flex-col gap-4 w-[280px] text-center">
@@ -53,7 +63,23 @@ function Register() {
           </a>
         </div>
       ) : (
-        <div className="flex flex-col gap-3 w-[250px]">
+        <div className="flex flex-col gap-3 w-[260px]">
+          {/* OAuth */}
+          <button
+            type="button"
+            className="primary bg-blue-500 hover:bg-blue-400 text-white w-full border-none"
+            onClick={handleGoogleSignUp}
+          >
+            <GoogleOutlined /> Continue with Google
+          </button>
+
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <div className="flex-1 border-t border-border" />
+            <span>or</span>
+            <div className="flex-1 border-t border-border" />
+          </div>
+
+          {/* Email / password */}
           <form onSubmit={handleRegister} className="login-form">
             <label>
               <div className="label">{t("Nombre")}</div>
@@ -72,7 +98,7 @@ function Register() {
               <input
                 className="text"
                 type="email"
-                placeholder="correo@ejemplo.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -98,7 +124,7 @@ function Register() {
 
             <button
               type="submit"
-              className="primary w-full mt-[16px]"
+              className="primary w-full mt-[4px]"
               disabled={loading}
             >
               {loading ? t("Cargando...") : t("Crear cuenta")}
