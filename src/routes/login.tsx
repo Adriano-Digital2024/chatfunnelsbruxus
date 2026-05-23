@@ -103,11 +103,11 @@ function Login() {
 
         <div className="border-b border-border w-full" />
 
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="flex justify-between gap-4 text-sm text-muted-foreground">
           <a href="/forgot-password" className="underline hover:text-foreground">
             {t("¿Olvidaste tu contraseña?")}
           </a>
-          <a href="/register" className="underline hover:text-foreground">
+          <a href="/register" className="underline hover:text-foreground whitespace-nowrap">
             {t("Crear cuenta")}
           </a>
         </div>

@@ -85,7 +85,7 @@ export const createUISlice: StateCreator<Partial<AppState>> = (
   filter: "todas" as keyof typeof filters,
   searchPattern: "",
   isLoading: false,
-  language: "es" as Language,
+  language: "en" as Language,
   toggle: (component: keyof UIState, value?: boolean) =>
     set((state) => ({
       ui: {
