@@ -158,7 +158,10 @@ function BillingPage() {
                     ? usage.find((u: any) => u.product_id === productId)
                     : null;
                   const currentVal = Number(
-                    usageRow?.value ?? usageRow?.count ?? 0
+                    (usageRow as any)?.value ??
+                    (usageRow as any)?.count ??
+                    (usageRow as any)?.quantity ??
+                    0
                   );
                   const limitVal = Number(limit.limit ?? limit.value ?? 0);
 

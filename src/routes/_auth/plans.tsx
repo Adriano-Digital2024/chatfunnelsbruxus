@@ -6,7 +6,7 @@ import SectionBody from "@/components/SectionBody";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSubscription } from "@/queries/useBilling";
 import { supabase } from "@/supabase/client";
-import { getPlanTier } from "@/utils/modelsCatalog";
+
 
 export const Route = createFileRoute("/_auth/plans")({
   component: PlansPage,
@@ -75,7 +75,6 @@ function PlansPage() {
 
   const { data: subscription } = useSubscription();
   const currentPlanName = ((subscription as any)?.plans?.name ?? "").toLowerCase();
-  const currentTier = getPlanTier((subscription as any)?.plans?.name);
 
   function getPrice(plan: (typeof plans)[0]) {
     return currency === "USD"

@@ -3,7 +3,7 @@ import SectionHeader from "@/components/SectionHeader";
 import SectionItem from "@/components/SectionItem";
 import { useTranslation } from "@/hooks/useTranslation";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Building2, Users, Webhook, Key, CreditCard } from "lucide-react";
+import { Building2, Users, Webhook, Key } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/settings/")({
   component: SettingsIndex,

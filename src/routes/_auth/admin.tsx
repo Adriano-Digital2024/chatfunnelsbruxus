@@ -8,7 +8,7 @@ import SectionBody from "@/components/SectionBody";
 import { useOrganizations } from "@/queries/useOrganizations";
 import { useSubscription } from "@/queries/useBilling";
 import { useCurrentAgents } from "@/queries/useAgents";
-import { Building2, Bot, ShieldCheck, Users, MessageSquareText } from "lucide-react";
+import { Building2, Bot, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/admin")({
   component: AdminPanel,
@@ -165,7 +165,7 @@ function AdminPanel() {
                     <span className="text-sm font-medium truncate">{agent.name}</span>
                     <span className="text-[10px] text-muted-foreground">
                       {agent.ai ? "AI agent" : "Human agent"}{" "}
-                      {agent.extra?.role ? `· ${agent.extra.role}` : ""}
+                      {(agent.extra as any)?.role ? `· ${(agent.extra as any).role}` : ""}
                     </span>
                   </div>
                 </div>
