@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/supabase/client";
 import { useTranslation } from "@/hooks/useTranslation";
-import { GoogleOutlined } from "@ant-design/icons";
+import { GoogleOutlined, GithubOutlined } from "@ant-design/icons";
 
 export const Route = createFileRoute("/register")({
   component: Register,
@@ -17,12 +17,10 @@ function Register() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function handleGoogleSignUp() {
+  async function handleOAuth(provider: "google" | "github") {
     await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin + "/",
-      },
+      provider,
+      options: { redirectTo: window.location.origin + "/" },
     });
   }
 
@@ -64,13 +62,21 @@ function Register() {
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-[260px]">
-          {/* OAuth */}
+          {/* OAuth buttons */}
           <button
             type="button"
             className="primary bg-blue-500 hover:bg-blue-400 text-white w-full border-none"
-            onClick={handleGoogleSignUp}
+            onClick={() => handleOAuth("google")}
           >
             <GoogleOutlined /> Continue with Google
+          </button>
+
+          <button
+            type="button"
+            className="primary bg-gray-900 hover:bg-gray-800 text-white w-full border-none"
+            onClick={() => handleOAuth("github")}
+          >
+            <GithubOutlined /> Continue with GitHub
           </button>
 
           <div className="flex items-center gap-2 text-muted-foreground text-xs">
@@ -79,7 +85,7 @@ function Register() {
             <div className="flex-1 border-t border-border" />
           </div>
 
-          {/* Email / password */}
+          {/* Email / password form */}
           <form onSubmit={handleRegister} className="login-form">
             <label>
               <div className="label">{t("Nombre")}</div>

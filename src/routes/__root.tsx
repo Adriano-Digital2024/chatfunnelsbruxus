@@ -7,7 +7,7 @@ import { redirect } from "@tanstack/react-router";
 import { supabase } from "@/supabase/client";
 import { useSetActiveOrg } from "@/hooks/useSetActiveOrg";
 
-const PUBLIC_PATHS = ["/login", "/onboard", "/register", "/forgot-password", "/reset-password", "/pricing"];
+const PUBLIC_PATHS = ["/login", "/onboard", "/register", "/forgot-password", "/reset-password"];
 
 function isPublicPath(pathname: string) {
   return PUBLIC_PATHS.some((p) => pathname.startsWith(p));

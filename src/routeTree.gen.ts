@@ -19,6 +19,7 @@ import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as OnboardTokenRouteImport } from './routes/onboard.$token'
 import { Route as OauthCallbackRouteImport } from './routes/oauth/callback'
 import { Route as AuthStatsRouteImport } from './routes/_auth/stats'
+import { Route as AuthPlansRouteImport } from './routes/_auth/plans'
 import { Route as AuthStatsIndexRouteImport } from './routes/_auth/stats/index'
 import { Route as AuthSettingsIndexRouteImport } from './routes/_auth/settings/index'
 import { Route as AuthIntegrationsIndexRouteImport } from './routes/_auth/integrations/index'
@@ -102,6 +103,11 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
 const AuthStatsRoute = AuthStatsRouteImport.update({
   id: '/stats',
   path: '/stats',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPlansRoute = AuthPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthStatsIndexRoute = AuthStatsIndexRouteImport.update({
@@ -304,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/plans': typeof AuthPlansRoute
   '/stats': typeof AuthStatsRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
@@ -350,6 +357,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/plans': typeof AuthPlansRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
   '/': typeof AuthIndexRoute
@@ -397,6 +405,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_auth/plans': typeof AuthPlansRoute
   '/_auth/stats': typeof AuthStatsRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/onboard/$token': typeof OnboardTokenRoute
@@ -445,6 +454,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/register'
     | '/reset-password'
+    | '/plans'
     | '/stats'
     | '/oauth/callback'
     | '/onboard/$token'
@@ -491,6 +501,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/register'
     | '/reset-password'
+    | '/plans'
     | '/oauth/callback'
     | '/onboard/$token'
     | '/'
@@ -537,6 +548,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/register'
     | '/reset-password'
+    | '/_auth/plans'
     | '/_auth/stats'
     | '/oauth/callback'
     | '/onboard/$token'
@@ -659,6 +671,13 @@ declare module '@tanstack/react-router' {
       path: '/stats'
       fullPath: '/stats'
       preLoaderRoute: typeof AuthStatsRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/plans': {
+      id: '/_auth/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof AuthPlansRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/stats/': {
@@ -926,6 +945,7 @@ const AuthStatsRouteWithChildren = AuthStatsRoute._addFileChildren(
 )
 
 interface AuthRouteChildren {
+  AuthPlansRoute: typeof AuthPlansRoute
   AuthStatsRoute: typeof AuthStatsRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
   AuthAgentsAgentIdRoute: typeof AuthAgentsAgentIdRoute
@@ -963,6 +983,7 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthPlansRoute: AuthPlansRoute,
   AuthStatsRoute: AuthStatsRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
   AuthAgentsAgentIdRoute: AuthAgentsAgentIdRoute,

@@ -12,6 +12,7 @@ import {
   Languages,
   Plus,
   NotebookTabs,
+  Sparkles,
 } from "lucide-react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { LinkButton } from "./LinkButton";
@@ -32,7 +33,6 @@ export default function Menu() {
 
   const { translate: t, currentLanguage, setCurrentLanguage } = useTranslation();
 
-  // Simpler approach - call useLocation without select first
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
@@ -95,6 +95,17 @@ export default function Menu() {
         >
           <BarChart3 className="w-[24px] h-[24px] stroke-[2]" />
         </LinkButton>
+
+        {/* Plans button */}
+        <LinkButton
+          to="/plans"
+          title={t("Planes")}
+          isActive={pathname.startsWith("/plans")}
+          className="mt-[10px]"
+        >
+          <Sparkles className="w-[22px] h-[22px] stroke-[2]" />
+        </LinkButton>
+
       </div>
 
       {/* Lower section */}
@@ -115,7 +126,7 @@ export default function Menu() {
             items: [
               {
                 key: "user_email",
-                type: "group", // using group name as title style
+                type: "group",
                 label: user?.email || "",
               },
               { type: "divider" },
