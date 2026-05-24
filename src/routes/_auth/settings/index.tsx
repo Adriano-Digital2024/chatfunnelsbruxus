@@ -48,20 +48,6 @@ function SettingsIndex() {
             }
           />
           <SectionItem
-            title={t("Facturación")}
-            aside={
-              <div className="p-[8px]">
-                <CreditCard className="w-[24px] h-[24px] text-muted-foreground" />
-              </div>
-            }
-            onClick={() =>
-              navigate({
-                to: "/settings/billing",
-                hash: (prevHash) => prevHash!,
-              })
-            }
-          />
-          <SectionItem
             title={t("Webhooks")}
             aside={
               <div className="p-[8px]">

@@ -14,6 +14,7 @@ import {
   NotebookTabs,
   Sparkles,
   ShieldCheck,
+  CreditCard,
 } from "lucide-react";
 import { isSuperAdmin } from "@/utils/superadmin";
 import { useLocation, useNavigate } from "@tanstack/react-router";
@@ -124,6 +125,16 @@ export default function Menu() {
 
       {/* Lower section */}
       <div className="flex flex-col items-center">
+
+        {/* Billing button */}
+        <LinkButton
+          to="/billing"
+          title={t("Facturación")}
+          isActive={pathname.startsWith("/billing")}
+          className="mt-[10px]"
+        >
+          <CreditCard className="w-[20px] h-[20px] stroke-[2]" />
+        </LinkButton>
 
         {/* Settings button */}
         <LinkButton

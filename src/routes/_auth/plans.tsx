@@ -96,7 +96,7 @@ function PlansPage() {
         {
           body: {
             plan: planId,
-            success_url: `${window.location.origin}/settings/billing`,
+            success_url: `${window.location.origin}/billing`,
             cancel_url: `${window.location.origin}/plans`,
           },
         }
