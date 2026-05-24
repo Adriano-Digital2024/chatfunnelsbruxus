@@ -13,7 +13,9 @@ import {
   Plus,
   NotebookTabs,
   Sparkles,
+  ShieldCheck,
 } from "lucide-react";
+import { isSuperAdmin } from "@/utils/superadmin";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { LinkButton } from "./LinkButton";
 import { resetAuthorizedCache } from "@/utils/IdbUtils";
@@ -105,6 +107,18 @@ export default function Menu() {
         >
           <Sparkles className="w-[22px] h-[22px] stroke-[2]" />
         </LinkButton>
+
+        {/* Admin button — superadmin only */}
+        {isSuperAdmin(user?.email) && (
+          <LinkButton
+            to="/admin"
+            title="Admin"
+            isActive={pathname.startsWith("/admin")}
+            className="mt-[10px]"
+          >
+            <ShieldCheck className="w-[22px] h-[22px] stroke-[2]" />
+          </LinkButton>
+        )}
 
       </div>
 
