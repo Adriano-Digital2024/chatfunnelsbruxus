@@ -142,12 +142,6 @@ button:disabled {
     @apply grow-0 gap-3 pl-0;
   }
 
-  /* Premium rounded inputs inside login/register/auth forms */
-  .login-form input.text {
-    @apply border border-border rounded-full px-[16px] py-[9px] bg-card hover:border-input focus-visible:border-primary;
-    border-bottom-width: 1px;
-  }
-
   .section-body p {
     @apply text-muted-foreground text-[14px] leading-relaxed;
   }
