@@ -224,7 +224,7 @@ export function WhatsAppIntegrationProvider({
         },
       );
     },
-    [],
+    [signup],
   );
 
   return (

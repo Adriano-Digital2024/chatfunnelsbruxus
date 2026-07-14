@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase, type TemplateData } from "@/supabase/client";
 import useBoundStore from "@/stores/useBoundStore";
+import { EDGE_FUNCTIONS } from "@/utils/edgeFunctions";
 
 export function useTemplates(organizationAddress?: string) {
   const activeOrgId = useBoundStore((state) => state.ui.activeOrgId);
@@ -11,7 +12,7 @@ export function useTemplates(organizationAddress?: string) {
       if (!organizationAddress) return [];
 
       const { data } = await supabase.functions.invoke(
-        "whatsapp-management/templates",
+        EDGE_FUNCTIONS.whatsappTemplates,
         {
           method: "PUT",
           body: { organization_id: activeOrgId, organization_address: organizationAddress },
@@ -37,7 +38,7 @@ export function useCreateTemplate() {
       organizationAddress: string;
     }) => {
       const { error } = await supabase.functions.invoke(
-        "whatsapp-management/templates",
+        EDGE_FUNCTIONS.whatsappTemplates,
         {
           method: "POST",
           body: { organization_id: activeOrgId, organization_address: organizationAddress, template },
@@ -67,7 +68,7 @@ export function useUpdateTemplate() {
       organizationAddress: string;
     }) => {
       const { error } = await supabase.functions.invoke(
-        "whatsapp-management/templates",
+        EDGE_FUNCTIONS.whatsappTemplates,
         {
           method: "PATCH",
           body: { organization_id: activeOrgId, organization_address: organizationAddress, template },
@@ -97,7 +98,7 @@ export function useDeleteTemplate() {
       organizationAddress: string;
     }) => {
       const { error } = await supabase.functions.invoke(
-        "whatsapp-management/templates",
+        EDGE_FUNCTIONS.whatsappTemplates,
         {
           method: "DELETE",
           body: { organization_id: activeOrgId, organization_address: organizationAddress, template },

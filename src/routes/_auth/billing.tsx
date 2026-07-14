@@ -6,6 +6,7 @@ import SectionBody from "@/components/SectionBody";
 import SectionFooter from "@/components/SectionFooter";
 import { useSubscription, useUsage, useTierLimits } from "@/queries/useBilling";
 import { supabase } from "@/supabase/client";
+import { EDGE_FUNCTIONS } from "@/utils/edgeFunctions";
 import { CreditCard, Zap, Loader2, ExternalLink, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/billing")({
@@ -91,7 +92,7 @@ function BillingPage() {
     setPortalLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke(
-        "create-portal-session",
+        EDGE_FUNCTIONS.createPortalSession,
         { body: { return_url: window.location.href } }
       );
       if (error || !data?.url) {

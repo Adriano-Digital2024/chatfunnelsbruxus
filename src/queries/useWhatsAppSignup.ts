@@ -3,6 +3,7 @@ import { supabase } from "@/supabase/client";
 import type { SignupPayload } from "@/contexts/WhatsAppIntegrationContext";
 import useBoundStore from "@/stores/useBoundStore";
 import { queryKeys } from "./queryKeys";
+import { EDGE_FUNCTIONS } from "@/utils/edgeFunctions";
 
 export function useWhatsAppSignup() {
   const queryClient = useQueryClient();
@@ -13,7 +14,7 @@ export function useWhatsAppSignup() {
       if (!organization_id) throw new Error("No active organization");
 
       const { data, error } = await supabase.functions.invoke(
-        "whatsapp-management/signup",
+        EDGE_FUNCTIONS.whatsappSignup,
         {
           method: "POST",
           body: {
@@ -49,7 +50,7 @@ export function useWhatsAppDisconnect() {
       if (!organization_id) throw new Error("No active organization");
 
       const { data, error } = await supabase.functions.invoke(
-        "whatsapp-management/signup",
+        EDGE_FUNCTIONS.whatsappSignup,
         {
           method: "DELETE",
           body: {

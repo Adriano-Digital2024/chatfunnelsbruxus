@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import Button from "@/components/Button";
 import type { SignupPayload } from "@/contexts/WhatsAppIntegrationContext";
+import { EDGE_FUNCTIONS } from "@/utils/edgeFunctions";
 
 export const Route = createFileRoute("/onboard/$token")({
   component: Onboard,
@@ -22,8 +23,8 @@ function Onboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-management/onboard?token=${token}`;
-    fetch(url, {
+    const baseUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${EDGE_FUNCTIONS.whatsappOnboard}`;
+    fetch(`${baseUrl}?token=${token}`, {
       headers: {
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
       },
@@ -77,9 +78,9 @@ function Onboard() {
             flow_type: sessionInfo.flow_type,
           };
 
-          const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-management/onboard`;
+          const baseUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${EDGE_FUNCTIONS.whatsappOnboard}`;
 
-          fetch(url, {
+          fetch(baseUrl, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
@@ -189,8 +190,8 @@ function Onboard() {
                   organization_name: "",
                 });
                 // Re-validate token
-                const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-management/onboard?token=${token}`;
-                fetch(url, {
+                const retryUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${EDGE_FUNCTIONS.whatsappOnboard}?token=${token}`;
+                fetch(retryUrl, {
                   headers: {
                     Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
                   },

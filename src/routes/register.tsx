@@ -68,7 +68,7 @@ function Register() {
             className="primary bg-blue-500 hover:bg-blue-400 text-white w-full border-none"
             onClick={() => handleOAuth("google")}
           >
-            <GoogleOutlined /> Continue with Google
+            <GoogleOutlined /> {t("Continuar con Google")}
           </button>
 
           <button
@@ -76,12 +76,12 @@ function Register() {
             className="primary bg-gray-900 hover:bg-gray-800 text-white w-full border-none"
             onClick={() => handleOAuth("github")}
           >
-            <GithubOutlined /> Continue with GitHub
+            <GithubOutlined /> {t("Continuar con GitHub")}
           </button>
 
           <div className="flex items-center gap-2 text-muted-foreground text-xs">
             <div className="flex-1 border-t border-border" />
-            <span>or</span>
+            <span>{t("o")}</span>
             <div className="flex-1 border-t border-border" />
           </div>
 

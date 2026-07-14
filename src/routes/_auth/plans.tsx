@@ -6,6 +6,7 @@ import SectionBody from "@/components/SectionBody";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSubscription } from "@/queries/useBilling";
 import { supabase } from "@/supabase/client";
+import { EDGE_FUNCTIONS } from "@/utils/edgeFunctions";
 
 
 export const Route = createFileRoute("/_auth/plans")({
@@ -91,7 +92,7 @@ function PlansPage() {
     setCheckingOut(planId);
     try {
       const { data, error: fnError } = await supabase.functions.invoke(
-        "create-checkout-session",
+        EDGE_FUNCTIONS.createCheckoutSession,
         {
           body: {
             plan: planId,
