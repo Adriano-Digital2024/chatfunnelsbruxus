@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { TickProvider } from "./contexts/useTick";
 import { WhatsAppIntegrationProvider } from "./contexts/WhatsAppIntegrationContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { loadTranslations } from "./i18n/translations";
 import type { Language } from "./stores/uiSlice";
 
@@ -58,12 +59,14 @@ await loadTranslations(initialLang);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TickProvider>
-        <WhatsAppIntegrationProvider>
-          <RouterProvider router={router} />
-        </WhatsAppIntegrationProvider>
-      </TickProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TickProvider>
+          <WhatsAppIntegrationProvider>
+            <RouterProvider router={router} />
+          </WhatsAppIntegrationProvider>
+        </TickProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 );

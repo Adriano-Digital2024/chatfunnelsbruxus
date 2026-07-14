@@ -24,65 +24,77 @@ export const useInitialDataFetch = () => {
   const initData = async () => {
     if (!activeOrgId) return;
 
-    // Phase 1: recent messages with chat context
-    const { data: phase1 } = await supabase
-      .rpc("init_data", {
-        p_organization_id: activeOrgId,
-        p_limit: PHASE1_LIMIT,
-        p_per_conversation: 10,
-      })
-      .throwOnError();
-
-    const p1 = phase1 as unknown as InitDataResponse;
-    pushConversations(p1.conversations);
-    pushMessages(p1.messages);
-
-    // Phase 2: older conversations with preview messages
-    // Skip if phase 1 returned fewer than the limit (all messages fit)
-    if (p1.messages.length >= PHASE1_LIMIT) {
-      const oldest = p1.messages[p1.messages.length - 1].timestamp;
-      const { data: phase2 } = await supabase
+    try {
+      // Phase 1: recent messages with chat context
+      const { data: phase1 } = await supabase
         .rpc("init_data", {
           p_organization_id: activeOrgId,
-          p_limit: 100,
-          p_per_conversation: 5,
-          p_until: oldest,
+          p_limit: PHASE1_LIMIT,
+          p_per_conversation: 10,
         })
         .throwOnError();
 
-      const p2 = phase2 as unknown as InitDataResponse;
-      pushConversations(p2.conversations);
-      pushMessages(p2.messages);
+      const p1 = phase1 as unknown as InitDataResponse;
+      pushConversations(p1.conversations);
+      pushMessages(p1.messages);
+
+      // Phase 2: older conversations with preview messages
+      // Skip if phase 1 returned fewer than the limit (all messages fit)
+      if (p1.messages.length >= PHASE1_LIMIT) {
+        const oldest = p1.messages[p1.messages.length - 1].timestamp;
+        const { data: phase2 } = await supabase
+          .rpc("init_data", {
+            p_organization_id: activeOrgId,
+            p_limit: 100,
+            p_per_conversation: 5,
+            p_until: oldest,
+          })
+          .throwOnError();
+
+        const p2 = phase2 as unknown as InitDataResponse;
+        pushConversations(p2.conversations);
+        pushMessages(p2.messages);
+      }
+    } catch (error) {
+      console.error("Failed to initialize data:", error);
     }
   };
 
   // Tab-visibility recovery: flat queries (updated_at-based)
   const loadConvs = async (since: Date) => {
     if (!activeOrgId) return;
-    const { data: conversations } = await supabase
-      .from("conversations")
-      .select()
-      .eq("organization_id", activeOrgId)
-      .gt("updated_at", since.toISOString())
-      .order("updated_at", { ascending: false })
-      .limit(999)
-      .throwOnError();
+    try {
+      const { data: conversations } = await supabase
+        .from("conversations")
+        .select()
+        .eq("organization_id", activeOrgId)
+        .gt("updated_at", since.toISOString())
+        .order("updated_at", { ascending: false })
+        .limit(999)
+        .throwOnError();
 
-    pushConversations(conversations);
+      pushConversations(conversations);
+    } catch (error) {
+      console.error("Failed to load conversations:", error);
+    }
   };
 
   const loadMsgs = async (since: Date) => {
     if (!activeOrgId) return;
-    const { data: messages } = await supabase
-      .from("messages")
-      .select()
-      .eq("organization_id", activeOrgId)
-      .gt("updated_at", since.toISOString())
-      .order("updated_at", { ascending: false })
-      .limit(999)
-      .throwOnError();
+    try {
+      const { data: messages } = await supabase
+        .from("messages")
+        .select()
+        .eq("organization_id", activeOrgId)
+        .gt("updated_at", since.toISOString())
+        .order("updated_at", { ascending: false })
+        .limit(999)
+        .throwOnError();
 
-    pushMessages(messages);
+      pushMessages(messages);
+    } catch (error) {
+      console.error("Failed to load messages:", error);
+    }
   };
 
   useEffect(() => {

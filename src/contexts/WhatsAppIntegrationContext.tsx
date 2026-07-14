@@ -121,7 +121,7 @@ export function WhatsAppIntegrationProvider({
           console.warn("Embedded signup error:", data.data);
         } else {
           // AbandonedFlowData
-          console.log("User abandoned flow at step:", data.data.current_step);
+          console.warn("User abandoned flow at step:", data.data.current_step);
         }
         return;
       }
@@ -184,16 +184,13 @@ export function WhatsAppIntegrationProvider({
             const code = response.authResponse.code;
 
             if (!code) {
-              console.log("User cancelled login or did not fully authorize.");
               return;
             }
 
             setLoading(true);
 
-            // Retrieve session info captured from message events
             const sessionInfo = (window as any).__waSessionInfo || {};
 
-            // Construct payload according to SignupPayload type
             const payload: SignupPayload = {
               code,
               application_id: import.meta.env.VITE_META_APP_ID,
@@ -202,8 +199,6 @@ export function WhatsAppIntegrationProvider({
               business_id: sessionInfo.business_id,
               flow_type: sessionInfo.flow_type,
             };
-
-            console.log("Sending signup payload:", payload); // Remove after testing
 
             signup(payload)
               .then(() => {
@@ -215,8 +210,6 @@ export function WhatsAppIntegrationProvider({
               .finally(() => {
                 setLoading(false);
               });
-          } else {
-            console.log("User cancelled login or did not fully authorize.");
           }
         },
         {

@@ -22,8 +22,6 @@ export function useAuth() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth event:", event);
-
       // There is a SIGNED_IN event at tab focus. Checking if the user is
       // already logged in to avoid navigating to "/" or "/login".
       const loggedUser = useBoundStore.getState().ui.user;
