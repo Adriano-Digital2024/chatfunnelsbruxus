@@ -5,10 +5,11 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useContacts } from "@/queries/useContacts";
 import SectionItem from "@/components/SectionItem";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Plus, Contact } from "lucide-react";
 import Avatar from "@/components/Avatar";
 import { formatPhoneNumber } from "@/utils/FormatUtils";
 import SearchBar from "@/components/SearchBar";
+import Spinner from "@/components/Spinner";
 import Fuse from "fuse.js";
 
 export const Route = createFileRoute("/_auth/contacts/")({
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/_auth/contacts/")({
 function ListContacts() {
   const { translate: t } = useTranslation();
   const navigate = useNavigate();
-  const { data: contacts } = useContacts();
+  const { data: contacts, isLoading } = useContacts();
   const [search, setSearch] = useState("");
 
   let filtered = contacts ?? [];
@@ -55,12 +56,24 @@ function ListContacts() {
             })
           }
         />
-        {search && filtered.length === 0 && (
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm p-6">
+            <Spinner size={16} />
+            {t("Cargando...")}
+          </div>
+        ) : !search && filtered.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-[32px] text-center">
+            <Contact className="w-10 h-10 text-muted-foreground" />
+            <p className="text-muted-foreground text-[14px]">
+              {t("No hay contactos aún. Agregá tu primer contacto.")}
+            </p>
+          </div>
+        ) : search && filtered.length === 0 ? (
           <div className="py-[32px] text-center text-muted-foreground text-[14px]">
             {t("Sin resultados para")} "{search}"
           </div>
-        )}
-        {filtered.map((contact) => (
+        ) : (
+          filtered.map((contact) => (
           <SectionItem
             key={contact.id}
             title={contact.name || t("Sin nombre")}

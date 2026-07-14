@@ -3,11 +3,14 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLocation, useRouter } from "@tanstack/react-router";
 import { LinkButton } from "./LinkButton";
 import Spinner from "./Spinner";
+import { useState } from "react";
+import ConfirmDialog from "./ConfirmDialog";
 
 export default function SectionHeader({ title, closeButton, onDelete, deleteDisabled, deleteDisabledReason, deleteLoading }: { title: string; closeButton?: boolean; onDelete?: () => void; deleteDisabled?: boolean; deleteDisabledReason?: string; deleteLoading?: boolean }) {
   const { translate: t } = useTranslation();
   const location = useLocation();
   const router = useRouter();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const showBackButton = location.pathname.split("/").filter(Boolean).length >= 2;
 
@@ -43,16 +46,29 @@ export default function SectionHeader({ title, closeButton, onDelete, deleteDisa
       </div>
 
       {onDelete && (
-        <button
-          className="p-[8px] rounded-full hover:bg-muted ml-auto disabled:opacity-30 disabled:hover:bg-transparent"
-          title={deleteDisabled && deleteDisabledReason
-            ? `${t("Eliminar")} - ${deleteDisabledReason}`
-            : t("Eliminar")}
-          onClick={onDelete}
-          disabled={deleteDisabled || deleteLoading}
-        >
-          {deleteLoading ? <Spinner size={24} /> : <Trash2 className="w-[24px] h-[24px]" />}
-        </button>
+        <>
+          <button
+            className="p-[8px] rounded-full hover:bg-muted ml-auto disabled:opacity-30 disabled:hover:bg-transparent"
+            title={deleteDisabled && deleteDisabledReason
+              ? `${t("Eliminar")} - ${deleteDisabledReason}`
+              : t("Eliminar")}
+            onClick={() => setShowConfirm(true)}
+            disabled={deleteDisabled || deleteLoading}
+          >
+            {deleteLoading ? <Spinner size={24} /> : <Trash2 className="w-[24px] h-[24px]" />}
+          </button>
+          <ConfirmDialog
+            open={showConfirm}
+            title={t("Confirmar eliminación")}
+            message={t("Esta acción no se puede deshacer.")}
+            loading={deleteLoading}
+            onConfirm={() => {
+              onDelete();
+              setShowConfirm(false);
+            }}
+            onCancel={() => setShowConfirm(false)}
+          />
+        </>
       )}
     </div>
   );

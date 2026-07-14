@@ -4,6 +4,7 @@ import type { StateCreator } from "zustand";
 // @ts-ignore
 import groupBy from "core-js-pure/actual/object/group-by";
 import { type MessageRowV0, toV1 } from "@/supabase/messages-v0";
+import { updateMessagesCache } from "@/utils/IdbUtils";
 
 export function timestampDescending(a?: MessageRow, b?: MessageRow) {
   return +new Date(a?.timestamp || 0) > +new Date(b?.timestamp || 0) ? -1 : 1;
@@ -85,13 +86,16 @@ export const createChatSlice: StateCreator<Partial<AppState>> = (
         },
       };
     }),
-  pushMessages: (msgsMixedVersions: MessageRow[]) =>
+  pushMessages: (msgsMixedVersions: MessageRow[]) => {
+    const msgs = msgsMixedVersions
+      .map((m) =>
+        m.content.version === "1" ? m : toV1(m as unknown as MessageRowV0)
+      )
+      .filter(Boolean) as MessageRow[];
+
+    updateMessagesCache(msgs);
+
     set((state) => {
-      const msgs = msgsMixedVersions
-        .map((m) =>
-          m.content.version === "1" ? m : toV1(m as unknown as MessageRowV0)
-        )
-        .filter(Boolean) as MessageRow[];
 
       const messages = new Map(state.chat.messages);
 
@@ -134,7 +138,8 @@ export const createChatSlice: StateCreator<Partial<AppState>> = (
           messages,
         },
       };
-    }),
+    });
+  },
   setMediaLoad: (messageId: string, mediaLoad: MediaLoad) => {
     set((state) => {
       const mediaLoads = new Map(state.chat.mediaLoads);
