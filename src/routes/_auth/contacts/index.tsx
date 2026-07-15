@@ -31,6 +31,9 @@ function ListContacts() {
     filtered = fuse.search(search).map((r) => r.item);
   }
 
+  const isEmpty = !isLoading && filtered.length === 0 && !search;
+  const isSearchEmpty = !isLoading && filtered.length === 0 && search;
+
   return (
     <>
       <SectionHeader title={t("Contactos")} />
@@ -56,24 +59,26 @@ function ListContacts() {
             })
           }
         />
-        {isLoading ? (
+        {isLoading && (
           <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm p-6">
             <Spinner size={16} />
             {t("Cargando...")}
           </div>
-        ) : !search && filtered.length === 0 ? (
+        )}
+        {isEmpty && (
           <div className="flex flex-col items-center gap-3 py-[32px] text-center">
             <Contact className="w-10 h-10 text-muted-foreground" />
             <p className="text-muted-foreground text-[14px]">
               {t("No hay contactos aún. Agregá tu primer contacto.")}
             </p>
           </div>
-        ) : search && filtered.length === 0 ? (
+        )}
+        {isSearchEmpty && (
           <div className="py-[32px] text-center text-muted-foreground text-[14px]">
             {t("Sin resultados para")} "{search}"
           </div>
-        ) : (
-          filtered.map((contact) => (
+        )}
+        {!isLoading && filtered.length > 0 && filtered.map((contact) => (
           <SectionItem
             key={contact.id}
             title={contact.name || t("Sin nombre")}
