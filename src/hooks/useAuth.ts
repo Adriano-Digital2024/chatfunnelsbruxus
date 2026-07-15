@@ -32,7 +32,7 @@ export function useAuth() {
       // Signed in
       if (!loggedUser && user && event === "SIGNED_IN") {
         navigate({
-          to: redirect || "/",
+          to: redirect || "/conversations",
         });
       }
 
