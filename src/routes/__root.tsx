@@ -42,7 +42,7 @@ export const Route = createRootRoute({
 
     if (user && isAuthRedirectPath(location.pathname)) {
       throw redirect({
-        to: search.redirect || "/conversations",
+        to: search.redirect || "/",
       });
     }
 
