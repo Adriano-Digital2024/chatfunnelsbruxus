@@ -1,22 +1,18 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import AdminLayout from "@/components/admin/AdminLayout";
-import useBoundStore from "@/stores/useBoundStore";
-import { isSuperAdmin } from "@/utils/superadmin";
 
 export const Route = createFileRoute("/_auth/admin")({
-  beforeLoad: () => {
-    const user = useBoundStore.getState().ui.user;
-    if (!user || !isSuperAdmin(user.email)) {
+  beforeLoad: ({ context }) => {
+    const user = context?.auth?.user;
+    if (!user || (user.role !== "admin" && user.role !== "owner")) {
       throw redirect({ to: "/conversations" });
     }
   },
-  component: AdminComponent,
+  component: () => {
+    return (
+      <AdminLayout>
+        <Outlet />
+      </AdminLayout>
+    );
+  },
 });
-
-function AdminComponent() {
-  return (
-    <AdminLayout>
-      <Outlet />
-    </AdminLayout>
-  );
-}
