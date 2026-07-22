@@ -1,6 +1,5 @@
 import { supabase } from "@/supabase/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "./queryKeys";
+import { useQuery } from "@tanstack/react-query";
 
 /**
  * Admin API base URL - should be configured in .env
@@ -49,8 +48,6 @@ export const useAdminSubscriptions = () => useAdminApi<any>("subscriptions", "su
 export const useAdminMetrics = () => useAdminApi<any>("metrics", "metrics");
 
 export const useAdminUserActions = () => {
-  const queryClient = useQueryClient();
-
   // Update user role
   const updateUserRole = (userId: string, role: string) => {
     return supabase.functions.invoke(`admin-api/users/${userId}/role`, {
