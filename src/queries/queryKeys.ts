@@ -38,4 +38,10 @@ export const queryKeys = {
     tierLimits: (orgId: NullableId) => [orgId, "billing", "tier_limits"] as const,
     planProducts: (orgId: NullableId) => [orgId, "billing", "plan_products"] as const,
   },
+  admin: {
+    users: () => ["admin", "users"] as const,
+    organizations: () => ["admin", "organizations"] as const,
+    subscriptions: () => ["admin", "subscriptions"] as const,
+    metrics: () => ["admin", "metrics"] as const,
+  },
 };
