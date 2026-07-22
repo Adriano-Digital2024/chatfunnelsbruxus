@@ -1,5 +1,5 @@
 import { supabase } from "@/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 
 /**
@@ -15,7 +15,6 @@ function useAdminApi<T>(
   options?: {
     enabled?: boolean;
     staleTime?: number;
-    cacheTime?: number;
   }
 ) {
   return useQuery({
@@ -40,7 +39,6 @@ function useAdminApi<T>(
     },
     enabled: options?.enabled ?? true,
     staleTime: options?.staleTime ?? 1000 * 60 * 5, // 5 minutes
-    cacheTime: options?.cacheTime ?? 1000 * 60 * 10, // 10 minutes
   });
 }
 
@@ -55,7 +53,7 @@ export const useAdminUserActions = () => {
 
   // Update user role
   const updateUserRole = (userId: string, role: string) => {
-    return supabase.functions.invoke("admin-api/users/${userId}/role", {
+    return supabase.functions.invoke(`admin-api/users/${userId}/role`, {
       method: "PUT",
       body: { role },
     });
@@ -63,7 +61,7 @@ export const useAdminUserActions = () => {
 
   // Update organization status
   const updateOrganizationStatus = (orgId: string, status: string) => {
-    return supabase.functions.invoke("admin-api/organizations/${orgId}/status", {
+    return supabase.functions.invoke(`admin-api/organizations/${orgId}/status`, {
       method: "PUT",
       body: { status },
     });
@@ -71,7 +69,7 @@ export const useAdminUserActions = () => {
 
   // Update subscription plan
   const updateSubscriptionPlan = (orgAddressId: string, planId: string) => {
-    return supabase.functions.invoke("admin-api/subscriptions/${orgAddressId}/plan", {
+    return supabase.functions.invoke(`admin-api/subscriptions/${orgAddressId}/plan`, {
       method: "PUT",
       body: { plan_id: planId },
     });
@@ -79,7 +77,7 @@ export const useAdminUserActions = () => {
 
   // Delete user
   const deleteUser = (userId: string) => {
-    return supabase.functions.invoke("admin-api/users/${userId}", {
+    return supabase.functions.invoke(`admin-api/users/${userId}`, {
       method: "DELETE",
     });
   };
