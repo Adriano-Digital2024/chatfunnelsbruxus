@@ -1,10 +1,6 @@
-export const UserManagementPage = () => {
-  const { translate: t } = useTranslation();
-  
-  return (
-    <div>
-      <h1>{t("Gestão de Usuários")}</h1>
-      <p>{t("Página de gestão de usuários admin")}</p>
-    </div>
-  );
-};
+import { createFileRoute } from "@tanstack/react-router";
+import UsersManagement from "@/components/admin/UsersManagement";
+
+export const Route = createFileRoute("/_auth/admin/users")({
+  component: UsersManagement,
+});
